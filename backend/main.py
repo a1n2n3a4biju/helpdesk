@@ -1,13 +1,28 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+from config import settings
 from db import get_db
+from routers import requesters, tickets
 
-app = FastAPI()
+app = FastAPI(title="AI Employee Helpdesk API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[settings.frontend_url],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(requesters.router)
+app.include_router(tickets.router)
+
 
 @app.get("/")
 def home():
     return {"message": "Helpdesk backend is running"}
+
 
 @app.get("/db-check")
 def db_check(db: Session = Depends(get_db)):
