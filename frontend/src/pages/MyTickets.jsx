@@ -49,57 +49,56 @@ function MyTickets() {
     return <div className="my-tickets-page" style={{ color: "red" }}>
 
       {error}
-</div>;
+    </div>;
 
   }
 
   return (
-<div className="my-tickets-page">
-<h1>My Tickets</h1>
-<p>Track and manage your IT support requests.</p>
+    <div className="my-tickets-page">
+      <h1>My Tickets</h1>
+      <p>Track and manage your IT support requests.</p>
 
       {tickets.length === 0 ? (
-<p>No tickets found.</p>
+        <p>No tickets found.</p>
 
       ) : (
-<div className="tickets-table">
-<table>
-<thead>
-<tr>
-<th>Ticket ID</th>
-<th>Issue Title</th>
-<th>Category</th>
-<th>Priority</th>
-<th>Status</th>
-<th>Date Created</th>
-</tr>
-</thead>
-<tbody>
+        <div className="tickets-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Issue Title</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Date Created</th>
+              </tr>
+            </thead>
+            <tbody>
 
               {tickets.map((ticket) => (
-<tr key={ticket.id}>
-<td>TKT{String(ticket.id).padStart(3, "0")}</td>
-<td>{ticket.title}</td>
-<td>{ticket.category}</td>
-<td>{ticket.priority}</td>
-<td>{ticket.status}</td>
-<td>
+                <tr key={ticket.id}>
+                  <td>TKT{String(ticket.id).padStart(3, "0")}</td>
+                  <td>{ticket.title}</td>
+                  <td>{ticket.category}</td>
+                  <td>{ticket.priority}</td>
+                  <td>{ticket.status}</td>
+                  <td>
 
                     {new Date(ticket.created_at).toLocaleDateString()}
-</td>
-</tr>
+                  </td>
+                </tr>
 
               ))}
-</tbody>
-</table>
-</div>
+            </tbody>
+          </table>
+        </div>
 
       )}
-</div>
+    </div>
 
   );
 
 }
 
 export default MyTickets;
- 

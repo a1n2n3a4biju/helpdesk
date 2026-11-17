@@ -71,14 +71,14 @@ function Sidebar() {
       </div>
 
       <div className="sidebar-bottom">
-        <div className="sidebar-help">
+        <NavLink to="/support/ai-recommendations" className="sidebar-help">
           <Bot size={22} />
           <div>
             <h4>AI Assistance</h4>
             <p>Smart ticket analysis</p>
           </div>
           <ChevronRight size={17} />
-        </div>
+        </NavLink>
       </div>
     </aside>
   );
