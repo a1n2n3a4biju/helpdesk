@@ -70,3 +70,8 @@ class CommentCreate(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
     note: str = Field(min_length=2, max_length=2000)
     actor: str | None = Field(default=None, max_length=100)
+
+class DashboardSummary(BaseModel):
+    total: int
+    by_status: dict[str, int]
+    by_priority: dict[str, int]
