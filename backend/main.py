@@ -4,7 +4,10 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 from config import settings
 from db import get_db
-from routers import dashboard, requesters, tickets
+from logging_setup import log_requests, setup_logging
+from routers import ai, dashboard, requesters, tickets
+
+setup_logging(settings.log_level, settings.log_file)
 
 app = FastAPI(
     title="AI Employee Helpdesk API",
@@ -19,10 +22,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.middleware("http")(log_requests)
 
 app.include_router(requesters.router)
 app.include_router(tickets.router)
 app.include_router(dashboard.router)
+app.include_router(ai.router)
 
 
 @app.get("/")

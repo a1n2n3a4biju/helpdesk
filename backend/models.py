@@ -60,11 +60,17 @@ class AISuggestion(Base):
     priority_reason: Mapped[str] = mapped_column(Text)
     troubleshooting_steps: Mapped[str] = mapped_column(Text)
     model_name: Mapped[str | None] = mapped_column(String(50))
+    # True when instruction-like text was removed from the ticket before analysis
+    input_flagged: Mapped[bool] = mapped_column(Boolean, server_default="false")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
 class AIFeedback(Base):
     __tablename__ = "ai_feedback"
+    __table_args__ = (
+        CheckConstraint("final_priority " + PRIORITY_RULE, name="ck_feedback_priority"),
+        CheckConstraint("final_category " + CATEGORY_RULE, name="ck_feedback_category"),
+    )
     id: Mapped[int] = mapped_column(primary_key=True)
     suggestion_id: Mapped[int] = mapped_column(ForeignKey("ai_suggestions.id"))
     ticket_id: Mapped[int] = mapped_column(ForeignKey("tickets.id"))
@@ -72,4 +78,6 @@ class AIFeedback(Base):
     useful: Mapped[bool] = mapped_column(Boolean)
     final_category: Mapped[str] = mapped_column(String(20))
     final_priority: Mapped[str] = mapped_column(String(10))
+    actor: Mapped[str | None] = mapped_column(String(100))
+    comment: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
