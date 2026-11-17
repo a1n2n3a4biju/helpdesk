@@ -3,17 +3,13 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from db import get_db
 from models import Requester, Ticket, TicketActivity
-from schemas import (ActivityOut, Category, Priority, Status,
-                     TicketCreate, TicketOut, TicketUpdate)
-
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-from db import get_db
-from models import Requester, Ticket, TicketActivity
 from schemas import (ActivityOut, Category, CommentCreate, Priority, PriorityUpdate,
                      Status, StatusUpdate, TicketCreate, TicketOut, TicketUpdate)
+import logging
+
 from services import workflow
+
+log = logging.getLogger("helpdesk.tickets")
 router = APIRouter(prefix="/tickets", tags=["Tickets"])
 
 
@@ -47,6 +43,7 @@ def create_ticket(data: TicketCreate, db: Session = Depends(get_db)):
                           new_status="New", actor=requester.display_name))
     db.commit()
     db.refresh(ticket)
+    log.info("ticket.created ticket_id=%s requester_id=%s category=%s", ticket.id, ticket.requester_id, ticket.category)
     return ticket
 
 
@@ -82,6 +79,7 @@ def update_ticket(ticket_id: int, data: TicketUpdate, db: Session = Depends(get_
                               note="Updated: " + ", ".join(changes)))
         db.commit()
         db.refresh(ticket)
+        log.info("ticket.updated ticket_id=%s fields=%s", ticket.id, ",".join(changes))
     return ticket
 
 
@@ -98,8 +96,14 @@ def ticket_history(ticket_id: int, db: Session = Depends(get_db)):
                          409: {"description": "Status change not allowed"}})
 def update_status(ticket_id: int, data: StatusUpdate, db: Session = Depends(get_db)):
     ticket = get_ticket_or_404(db, ticket_id)
-    workflow.change_status(db, ticket, data.status, data.actor, data.note)
+    old_status = ticket.status
+    try:
+        workflow.change_status(db, ticket, data.status, data.actor, data.note)
+    except HTTPException:
+        log.warning("ticket.status_rejected ticket_id=%s from=%s to=%s", ticket.id, old_status, data.status)
+        raise
     db.commit()
+    log.info("ticket.status_changed ticket_id=%s from=%s to=%s", ticket.id, old_status, data.status)
     db.refresh(ticket)
     return ticket
 
@@ -108,8 +112,10 @@ def update_status(ticket_id: int, data: StatusUpdate, db: Session = Depends(get_
               responses={404: {"description": "Ticket not found"}})
 def update_priority(ticket_id: int, data: PriorityUpdate, db: Session = Depends(get_db)):
     ticket = get_ticket_or_404(db, ticket_id)
+    old_priority = ticket.priority
     workflow.change_priority(db, ticket, data.priority, data.actor, data.note)
     db.commit()
+    log.info("ticket.priority_changed ticket_id=%s from=%s to=%s", ticket.id, old_priority, data.priority)
     db.refresh(ticket)
     return ticket
 
@@ -121,4 +127,5 @@ def create_comment(ticket_id: int, data: CommentCreate, db: Session = Depends(ge
     activity = workflow.add_comment(db, ticket, data.note, data.actor)
     db.commit()
     db.refresh(activity)
+    log.info("ticket.comment_added ticket_id=%s activity_id=%s", ticket.id, activity.id)
     return activity
