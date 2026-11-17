@@ -1,0 +1,117 @@
+.work-queue-page {
+ padding: 30px;
+ width: 100%;
+ box-sizing: border-box;
+}
+.queue-header h1 {
+ font-size: 28px;
+ color: #172033;
+ margin-bottom: 8px;
+}
+.queue-header p {
+ color: #718096;
+ margin-bottom: 25px;
+}
+.queue-stats {
+ display: grid;
+ grid-template-columns: repeat(4, 1fr);
+ gap: 20px;
+ margin-bottom: 30px;
+}
+.queue-stat-card {
+ background: white;
+ padding: 22px;
+ border-radius: 12px;
+ border: 1px solid #e5e7eb;
+}
+.queue-stat-card h3 {
+ color: #718096;
+ font-size: 14px;
+}
+.queue-stat-card h2 {
+ font-size: 28px;
+ color: #2563eb;
+ margin-top: 12px;
+}
+.queue-table-container {
+ background: white;
+ padding: 25px;
+ border-radius: 12px;
+ border: 1px solid #e5e7eb;
+ overflow-x: auto;
+}
+.queue-toolbar {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ gap: 15px;
+ margin-bottom: 25px;
+}
+.queue-toolbar h2 {
+ color: #172033;
+ font-size: 19px;
+}
+.queue-toolbar input,
+.queue-toolbar select,
+.queue-table-container td select {
+ padding: 10px;
+ border: 1px solid #dbe2ea;
+ border-radius: 7px;
+ background: white;
+}
+.queue-table-container table {
+ width: 100%;
+ border-collapse: collapse;
+ min-width: 750px;
+}
+.queue-table-container th,
+.queue-table-container td {
+ padding: 16px 12px;
+ text-align: left;
+ border-bottom: 1px solid #edf0f4;
+ font-size: 13px;
+}
+.queue-table-container th {
+ background: #f7f9fc;
+ color: #64748b;
+}
+.priority,
+.status {
+ padding: 6px 10px;
+ border-radius: 20px;
+ font-size: 12px;
+ font-weight: 600;
+}
+.priority.high,
+.priority.critical {
+ background: #fee2e2;
+ color: #dc2626;
+}
+.priority.medium {
+ background: #fef3c7;
+ color: #b45309;
+}
+.priority.low {
+ background: #dcfce7;
+ color: #15803d;
+}
+.status.new {
+ background: #dbeafe;
+ color: #2563eb;
+}
+.status.in-progress {
+ background: #fef3c7;
+ color: #b45309;
+}
+.status.resolved {
+ background: #dcfce7;
+ color: #15803d;
+}
+@media (max-width: 900px) {
+ .queue-stats {
+   grid-template-columns: repeat(2, 1fr);
+ }
+ .queue-toolbar {
+   flex-wrap: wrap;
+ }
+}

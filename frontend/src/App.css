@@ -1,0 +1,50 @@
+.app-container {
+
+  display: flex;
+
+  min-height: 100vh;
+
+  width: 100%;
+
+}
+
+.main-area {
+
+  margin-left: 260px;
+
+  width: calc(100% - 260px);
+
+  min-height: 100vh;
+
+  padding: 35px;
+
+  background: #f5f7fb;
+
+  position: relative;
+
+}
+
+.main-content {
+
+  width: 100%;
+
+}
+
+.main-content h1 {
+
+  color: #172554;
+
+  font-size: 28px;
+
+  margin-bottom: 12px;
+
+}
+
+.main-content p {
+
+  color: #64748b;
+
+  font-size: 15px;
+
+}
+ 
