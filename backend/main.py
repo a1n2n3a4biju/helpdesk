@@ -6,7 +6,12 @@ from config import settings
 from db import get_db
 from routers import dashboard, requesters, tickets
 
-app = FastAPI(title="AI Employee Helpdesk API")
+app = FastAPI(
+    title="AI Employee Helpdesk API",
+    description="REST API for raising, tracking and resolving IT support tickets, "
+                "with advisory AI suggestions. Staff keep final control of every ticket.",
+    version="1.0.0",
+)
 
 app.add_middleware(
     CORSMiddleware,
